@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Анастасия Воронина](https://up.htmlacademy.ru/javascript/21/user/1297343).
-* Наставник: `Неизвестно`.
+* Наставник:[Андрей Слесаренко](https://htmlacademy.ru/profile/swen).
 
 ---
 
