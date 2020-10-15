@@ -1,50 +1,89 @@
 'use strict';
 const mapBlock = document.querySelector(`.map`);
 mapBlock.classList.remove(`map--faded`);
-
 const pins = document.querySelector(`.map__pins`);
+
 const pinsTemplate = document.querySelector(`#pin`).content;
+const ADVERTISEMENT_TITLES = [
+  `И снова Торонто!`,
+  `Нью-Йорк, Нью-Йорк!`,
+  `Велкам ту Сингапур!`,
+  `Здравствуй, Прага!`,
+  `Бонжур, Париж!`,
+  `Будапешт, Hello!`,
+  `Панама-Нама`,
+  `Свободный Амстердам`
+];
+const ADVERTISEMENT_TYPES = [
+  {
+    id: `flat`,
+    translation: `Квартира`
+  },
+  {
+    id: `bungalow`,
+    translation: `Бунгало`
+  },
+  {
+    id: `house`,
+    translation: `Дом`
+  },
+  {
+    id: `palace`,
+    translation: `Дворец`
+  },
+];
 
-const titleContent = [`И снова Торонто!`, `Нью-Йорк, Нью-Йорк!`, `Велкам ту Сингапур!`, `Здравствуй, Прага!`, `Бонжур, Париж!`, `Будапешт, Hello!`, `Панама-Нама`, `Свободный Амстердам`];
-const typeContent = [`bungalow`, `flat`, `house`, `palace`];
-const featuresContent = [`wifi`, `dishwasher`, `parking`, `washer`];
-const descriptionContent = [`qui ratione voluptatem sequi nesciunt`, `quia voluptas sit`, `aspernatur aut odit aut fugit`, `taque earum rerum hic tenetur`];
-const photosContent = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel1.jpg`];
+const ADVERTISEMENT_FEATURES = [
+  `wifi`,
+  `dishwasher`,
+  `parking`,
+  `washer`
+];
+const ADVERTISEMENT_DESCRIPTIONS = [
+  `qui ratione voluptatem sequi nesciunt`,
+  `quia voluptas sit`,
+  `aspernatur aut odit aut fugit`,
+  `taque earum rerum hic tenetur`
+];
+const ADVERTISEMENT_PHOTOS = [
+  `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
+  `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
+  `http://o0.github.io/assets/images/tokyo/hotel1.jpg`
+];
 
-const minTitleRange = 0;
-const maxTitleRange = 7;
-const minPriceRange = 1000;
-const maxPriceRange = 35000;
-const minTypeRange = 0;
-const maxTypeRange = 3;
-const minRoomsRange = 1;
-const maxRoomsRange = 4;
-const minGuestsRange = 1;
-const maxGuestsRange = 6;
-const minInOutRange = 2;
-const maxInOutRange = 4;
-const minFeaturesRange = 0;
-const maxFeaturesRange = 3;
-const minDescriptionRange = 0;
-const maxDescriptionRange = 3;
+const MIN_PRICE_RANGE = 1000;
+const MAX_PRICE_RANGE = 35000;
+const MIN_ROOMS_RANGE = 1;
 
-const MINRANGELOCATION = 130;
-const maxRangeLocationY = 480;
-const maxRangeLocationX = 760;
+const MAX_ROOMS_RANGE = 4;
+const MIN_GUESTS_RANGE = 1;
+const MAX_GUESTS_RANGE = 6;
 
-const minLocationX = -60;
-const maxLocationX = 680;
-const minLocationY = 130;
-const maxLocationY = 560;
+const MIN_TIME_RANGE = 2;
+const MAX_TIME_RANGE = 4;
+const MIN_LOCATION_RANGE = 130;
+
+const MAX_ADRESS_LOCATION_X_RANGE = 760;
+const MAX_ADRESS_LOCATION_Y_RANGE = 480;
+const MIN_LOCATION_X_RANGE = -60;
+
+const MAX_LOCATION_X_RANGE = 680;
+const MIN_LOCATION_Y_RANGE = 130;
+const MAX_LOCATION_Y_RANGE = 560;
 
 
-const randomInteger = (min, max) => {
-  let rand = min + Math.random() * (max + 1 - min);
+const getRandomArrayElement = (arr) => {
+  const i = Math.floor(Math.random() * arr.length);
+  const random = arr[i];
+  return random;
+};
+
+const getRandomRangeElement = (min, max) => {
+  const rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 };
 
-// добавление диапазона чисел в массив
-const getRandomArray = (min, max) => {
+const getRandomArrayOfNumbers = (min, max) => {
   const array = [];
   for (let i = min; i <= max; i++) {
     array.push(i);
@@ -52,7 +91,7 @@ const getRandomArray = (min, max) => {
   return array;
 };
 
-const shuffle = (arr) => {
+const getShuffledArray = (arr) => {
   let j; let x; let i;
   for (i = arr.length - 1; i > 0; i--) {
     j = Math.floor(Math.random() * (i + 1));
@@ -62,130 +101,124 @@ const shuffle = (arr) => {
   }
   return arr;
 };
+const shuffledAvatarArray = getShuffledArray(getRandomArrayOfNumbers(1, 8));
 
-// задаем перемешанному массиву переменную со значением диапазона avatar
-const shuffleArray = shuffle(getRandomArray(1, 8));
+const createArrayObjects = (count) => {
+  const adressLocationX = getRandomRangeElement(MIN_LOCATION_RANGE, MAX_ADRESS_LOCATION_X_RANGE);
+  const adressLocationY = getRandomRangeElement(MIN_LOCATION_RANGE, MAX_ADRESS_LOCATION_Y_RANGE);
+  const advertisments = [];
 
-const getObject = (iter) => {
+  for (let i = 0; i < count; i++) {
+    const author = {};
+    author.avatar = `img/avatars/user0` + shuffledAvatarArray[i] + `.png`;
 
-  const locationY = randomInteger(MINRANGELOCATION, maxRangeLocationY);
-  const locationX = randomInteger(MINRANGELOCATION, maxRangeLocationX);
+    const offer = {
+      title: getRandomArrayElement(ADVERTISEMENT_TITLES),
+      address: ` ` + adressLocationX + `,` + adressLocationY + ` `,
+      price: getRandomRangeElement(MIN_PRICE_RANGE, MAX_PRICE_RANGE),
 
-  let objectsAll = [];
+      type: getRandomArrayElement(ADVERTISEMENT_TYPES),
+      rooms: getRandomRangeElement(MIN_ROOMS_RANGE, MAX_ROOMS_RANGE),
+      guests: getRandomRangeElement(MIN_GUESTS_RANGE, MAX_GUESTS_RANGE),
 
-  for (let i = 0; i < iter; i++) {
-    let author = {};
-    author.avatar = `img/avatars/user0` + shuffleArray[i] + `.png`;
-    let offer = {
-      title: titleContent[randomInteger(minTitleRange, maxTitleRange)],
-      address: ` ` + locationY + `,` + locationX + ` `,
-      price: randomInteger(minPriceRange, maxPriceRange),
-      type: typeContent[randomInteger(minTypeRange, maxTypeRange)],
-      rooms: randomInteger(minRoomsRange, maxRoomsRange),
-      guests: randomInteger(minGuestsRange, maxGuestsRange),
-      checkin: `1` + randomInteger(minInOutRange, maxInOutRange) + `:00`,
-      checkout: `1` + randomInteger(minInOutRange, maxInOutRange) + `:00`,
-      features: featuresContent[randomInteger(minFeaturesRange, maxFeaturesRange)] + `, ` + featuresContent[randomInteger(minFeaturesRange, maxFeaturesRange)],
-      description: descriptionContent[randomInteger(minDescriptionRange, maxDescriptionRange)],
-      photos: [photosContent[1], photosContent[2]],
+      checkin: `1` + getRandomRangeElement(MIN_TIME_RANGE, MAX_TIME_RANGE) + `:00`,
+      checkout: `1` + getRandomRangeElement(MIN_TIME_RANGE, MAX_TIME_RANGE) + `:00`,
+      features: getRandomArrayElement(ADVERTISEMENT_FEATURES) +
+      `, ` + getRandomArrayElement(ADVERTISEMENT_FEATURES),
+
+      description: getRandomArrayElement(ADVERTISEMENT_DESCRIPTIONS),
+      photos: [ADVERTISEMENT_PHOTOS[1], ADVERTISEMENT_PHOTOS[2]],
     };
-    let location = {x: randomInteger(minLocationX, maxLocationX), y: randomInteger(minLocationY, maxLocationY)};
 
-    objectsAll.push({author, offer, location});
+    const location = {
+      x: getRandomRangeElement(MIN_LOCATION_X_RANGE, MAX_LOCATION_X_RANGE),
+      y: getRandomRangeElement(MIN_LOCATION_Y_RANGE, MAX_LOCATION_Y_RANGE)
+    };
+
+    advertisments.push({
+      author,
+      offer,
+      location
+    });
   }
-
-  return objectsAll;
+  return advertisments;
 };
-
-let finArray = getObject(8);
+const createdArray = createArrayObjects(8);
 
 const renderPins = (array) => {
   for (let i = 0; i < array.length; i++) {
-    let pinElement = pinsTemplate.cloneNode(true);
-    let pinStyle = pinsTemplate.querySelector(`.map__pin`);
-    let moveX = 100;
-    let moveY = 40;
+    const pinElement = pinsTemplate.cloneNode(true);
+    const pinStyle = pinsTemplate.querySelector(`.map__pin`);
+    const moveX = 100;
+    const moveY = 40;
 
-    pinStyle.setAttribute(`style`, `left:` + (moveX + array[i].location.x) + `px; top:` + (moveY + array[i].location.y) + `px;`);
-    let pinImg = pinStyle.querySelector(`img`);
+    pinStyle.setAttribute(`style`, `left:` + (moveX + array[i].location.x)
+    + `px; top:` + (moveY + array[i].location.y) + `px;`);
+
+    const pinImg = pinStyle.querySelector(`img`);
     pinImg.src = array[i].author.avatar;
     pinImg.alt = array[i].offer.title;
-
-
     pins.appendChild(pinElement);
   }
 };
-renderPins(finArray);
-
+renderPins(createdArray);
 
 const cardsTemplate = document.querySelector(`#card`)
 .content
 .querySelector(`.map__card`);
-
 const mapFilter = mapBlock.querySelector(`.map__filters-container`);
 
-let cardElement = cardsTemplate.cloneNode(true);
-let cardAvatar = cardElement.querySelector(`.popup__avatar`);
-let cardTitle = cardElement.querySelector(`.popup__title`);
-let cardAddress = cardElement.querySelector(`.popup__text--address`);
-let cardPrice = cardElement.querySelector(`.popup__text--price`);
-let cardType = cardElement.querySelector(`.popup__type`);
-let cardRoomsGuests = cardElement.querySelector(`.popup__text--capacity`);
-let cardTime = cardElement.querySelector(`.popup__text--time`);
-let cardFeatures = cardElement.querySelector(`.popup__features`);
-let cardDescription = cardElement.querySelector(`.popup__description`);
-let cardPhotoes = cardElement.querySelector(`.popup__photos`);
-let cardPhotoesImg = cardPhotoes.querySelector(`img`);
-let arr = finArray[0].offer;
-cardAvatar.src = finArray[0].author.avatar;
-cardTitle.textContent = arr.title;
-cardAddress.textContent = arr.address;
-cardPrice.textContent = arr.price + `₽/ночь`;
+const cardElement = cardsTemplate.cloneNode(true);
+const cardAvatar = cardElement.querySelector(`.popup__avatar`);
+const cardTitle = cardElement.querySelector(`.popup__title`);
 
-const getCardType = (english, rus) => {
-  if (arr.type === english) {
-    cardType.textContent = rus;
+const cardAddress = cardElement.querySelector(`.popup__text--address`);
+const cardPrice = cardElement.querySelector(`.popup__text--price`);
+const cardType = cardElement.querySelector(`.popup__type`);
+
+const cardRoomsGuests = cardElement.querySelector(`.popup__text--capacity`);
+const cardTime = cardElement.querySelector(`.popup__text--time`);
+const cardFeatures = cardElement.querySelector(`.popup__features`);
+
+const cardDescription = cardElement.querySelector(`.popup__description`);
+const cardPhotoes = cardElement.querySelector(`.popup__photos`);
+const cardPhotoesImg = cardPhotoes.querySelector(`img`);
+
+const ROOMSVARIATIONSARRAY = [`комната`, `комнаты`];
+const GUESTSVARIATIONSARRAY = [`гостя`, `гостей`];
+
+const pluralizeWord = (arrayElement, array) => {
+  if (arrayElement === 1) {
+    return array[0];
+  } else {
+    return array[1];
   }
-  return cardType.textContent;
 };
-getCardType(`flat`, `Квартира`);
-getCardType(`bungalow`, `Бунгало`);
-getCardType(`house`, `Дом`);
-getCardType(`palace`, `Дворец`);
 
-let endingRooms = `ы`;
-let endingGuests = `ей`;
-if (arr.rooms === 1) {
-  endingRooms = `а`;
+cardAvatar.src = createdArray[0].author.avatar;
+cardTitle.textContent = createdArray[0].offer.title;
+cardAddress.textContent = createdArray[0].offer.address;
+
+cardPrice.textContent = createdArray[0].offer.price + `₽/ночь`;
+for (let i = 0; i <= ADVERTISEMENT_TYPES.length; i++) {
+  const currentType = ADVERTISEMENT_TYPES[i];
+  if (createdArray[0].offer.type === currentType) {
+    cardType.textContent = currentType.translation;
+  }
 }
-if (arr.guests === 1) {
-  endingGuests = `я`;
-}
-cardRoomsGuests.textContent = arr.rooms + ` комнат` + endingRooms + ` для ` + arr.guests + ` гост` + endingGuests;
-cardTime.textContent = `Заезд после ` + arr.checkin + `, выезд до ` + arr.checkout;
-cardFeatures.textContent = arr.features;
-cardDescription.textContent = arr.description;
+const roomsEnding = pluralizeWord(createdArray[0].offer.rooms, ROOMSVARIATIONSARRAY);
+const guestsEnding = pluralizeWord(createdArray[0].offer.guests, GUESTSVARIATIONSARRAY);
+cardRoomsGuests.textContent = createdArray[0].offer.rooms + ` ` + roomsEnding +
+` для ` + createdArray[0].offer.guests + ` ` + guestsEnding;
 
+cardTime.textContent = `Заезд после ` + createdArray[0].offer.checkin + `, выезд до `
++ createdArray[0].offer.checkout;
+cardFeatures.textContent = createdArray[0].offer.features;
+cardDescription.textContent = createdArray[0].offer.description;
 
-cardPhotoesImg.src = arr.photos[randomInteger(0, 1)];
-let photoesImgClone = cardPhotoesImg.cloneNode(true);
+cardPhotoesImg.src = createdArray[0].offer.photos[getRandomRangeElement(0, 1)];
+const photoesImgClone = cardPhotoesImg.cloneNode(true);
 cardPhotoes.appendChild(photoesImgClone);
-cardPhotoesImg.src = arr.photos[randomInteger(0, 1)];
 
+cardPhotoesImg.src = createdArray[0].offer.photos[getRandomRangeElement(0, 1)];
 mapBlock.insertBefore(cardElement, mapFilter);
-
-const isOfferChildExist = (child, hidden) => {
-  if (arr.contains(!child)) {
-    hidden.classList.add(`.hidden`);
-  }
-};
-isOfferChildExist(arr.title, cardTitle);
-isOfferChildExist(arr.address, cardAddress);
-isOfferChildExist(arr.price, cardPrice);
-isOfferChildExist(arr.type, cardType);
-isOfferChildExist(arr.rooms, cardRoomsGuests);
-isOfferChildExist(arr.guests, cardRoomsGuests);
-isOfferChildExist(arr.checkin, cardTime);
-isOfferChildExist(arr.checkout, cardTime);
-isOfferChildExist(arr.description, cardDescription);
-isOfferChildExist(arr.photos, cardPhotoes);
