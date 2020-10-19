@@ -1,6 +1,5 @@
 'use strict';
 const mapBlock = document.querySelector(`.map`);
-mapBlock.classList.remove(`map--faded`);
 const pins = document.querySelector(`.map__pins`);
 
 const pinsTemplate = document.querySelector(`#pin`).content;
@@ -144,7 +143,7 @@ const createArrayObjects = (count) => {
   return advertisments;
 };
 const createdArray = createArrayObjects(8);
-
+/*
 const renderPins = (array) => {
   for (let i = 0; i < array.length; i++) {
     const pinElement = pinsTemplate.cloneNode(true);
@@ -166,7 +165,7 @@ renderPins(createdArray);
 const cardsTemplate = document.querySelector(`#card`)
 .content
 .querySelector(`.map__card`);
-const mapFilter = mapBlock.querySelector(`.map__filters-container`);
+const mapFiltersContainer = mapBlock.querySelector(`.map__filters-container`);
 
 const cardElement = cardsTemplate.cloneNode(true);
 const cardAvatar = cardElement.querySelector(`.popup__avatar`);
@@ -221,4 +220,76 @@ const photoesImgClone = cardPhotoesImg.cloneNode(true);
 cardPhotoes.appendChild(photoesImgClone);
 
 cardPhotoesImg.src = createdArray[0].offer.photos[getRandomRangeElement(0, 1)];
-mapBlock.insertBefore(cardElement, mapFilter);
+mapBlock.insertBefore(cardElement, mapFiltersContainer);
+*/
+// module4-task1
+const mapFilters = document.querySelectorAll(`.map__filter`);
+const advertisementForm = document.querySelector(`.ad-form`);
+const advertisementFormHeader = document.querySelector(`.ad-form-header`);
+
+const mainPin = document.querySelector(`.map__pin--main`);
+const advertisementFormElements = document.querySelectorAll(`.ad-form__element`);
+const getDisabledCollectionElements = (elements) => {
+  for (let element of elements) {
+    element.setAttribute(`disabled`, `disabled`);
+  }
+};
+
+const getNotActiveMode = () => {
+  getDisabledCollectionElements(mapFilters);
+  getDisabledCollectionElements(advertisementFormElements);
+  advertisementFormHeader.setAttribute(`disabled`, `disabled`);
+};
+getNotActiveMode();
+
+const getActiveCollectionElements = (elements) => {
+  for (let element of elements) {
+    element.removeAttribute(`disabled`, `disabled`);
+  }
+};
+
+const getActiveMode = () => {
+  mapBlock.classList.remove(`map--faded`);
+  advertisementFormHeader.removeAttribute(`disabled`, `disabled`);
+
+  getActiveCollectionElements(advertisementFormElements);
+  getActiveCollectionElements(mapFilters);
+  advertisementForm.classList.remove(`ad-form--disabled`);
+};
+
+mainPin.addEventListener(`mousedown`, function (evt) {
+  if (evt.which === 1) {
+    getActiveMode();
+  }
+});
+
+mainPin.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    getActiveMode();
+  }
+});
+
+// заполнение поля адрес
+
+// валидация гостей и комнат
+const rooms = document.querySelector(`#room_number`);
+const roomNumbers = rooms.querySelectorAll(`option`);
+const guests = document.querySelector(`#capacity`);
+const guestsNumber = guests.querySelectorAll(`option`);
+
+guests.onchange = () => {
+  for (let roomNumber of roomNumbers) {
+    if (roomNumber.value === 1 && guestsNumber.value !== 1) {
+      guests.setCustomValidity(`Ошибка!Размещение в 1-ой комнате расчитано только на 1 гостя. Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя"`);
+    }
+    if (roomNumber.value === 2 && guestsNumber.value !== 1 || guestsNumber.value !== 2) {
+      guests.setCustomValidity(`Ошибка!Размещение в 2-х комнатах расчитано только на 1 гостя или на 2-х гостей. Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя" или "для 2 гостей"`);
+    }
+    if (roomNumber.value === 3 && guestsNumber.value !== 1 || guestsNumber.value !== 2 || guestsNumber.value !== 3) {
+      guests.setCustomValidity(`Ошибка!Размещение в 3-х комнатах расчитано только на 1 гостя, 2-х гостей или 3-ч гостей. Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя", "для 2 гостей" или "для 3 гостей"`);
+    }
+    if (roomNumber.value === 100 && guestsNumber.value === 1 || guestsNumber.value === 2 || guestsNumber.value === 3) {
+      guests.setCustomValidity(`Ошибка!При выборе 100 комнат действуют специальные условия! Пожалуйста выберете в графе "Количество мест" пункт "не для гостей"`);
+    }
+  }
+};
