@@ -1,8 +1,8 @@
 'use strict';
 const mapBlock = document.querySelector(`.map`);
-const pins = document.querySelector(`.map__pins`);
+// const pins = document.querySelector(`.map__pins`);
 
-const pinsTemplate = document.querySelector(`#pin`).content;
+// const pinsTemplate = document.querySelector(`#pin`).content;
 const ADVERTISEMENT_TITLES = [
   `И снова Торонто!`,
   `Нью-Йорк, Нью-Йорк!`,
@@ -142,7 +142,7 @@ const createArrayObjects = (count) => {
   }
   return advertisments;
 };
-const createdArray = createArrayObjects(8);
+createArrayObjects(8);
 /*
 const renderPins = (array) => {
   for (let i = 0; i < array.length; i++) {
