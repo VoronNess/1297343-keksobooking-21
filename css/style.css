@@ -201,14 +201,12 @@ fieldset {
 .map__pin--main {
   width: 65px;
   height: 65px;
-
   cursor: move;
 }
 
 .map__pin--main img {
   position: relative;
   z-index: 1;
-
   padding: 2px 6px 6px;
 
   -webkit-transform: translateY(-7px);
@@ -258,7 +256,6 @@ fieldset {
   position: absolute;
   top: 100%;
   left: 50%;
-
   width: 0;
   height: 0;
 

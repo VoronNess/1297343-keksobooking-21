@@ -222,6 +222,7 @@ cardPhotoes.appendChild(photoesImgClone);
 cardPhotoesImg.src = createdArray[0].offer.photos[getRandomRangeElement(0, 1)];
 mapBlock.insertBefore(cardElement, mapFiltersContainer);
 */
+
 // module4-task1
 const mapFilters = document.querySelectorAll(`.map__filter`);
 const advertisementForm = document.querySelector(`.ad-form`);
@@ -229,67 +230,147 @@ const advertisementFormHeader = document.querySelector(`.ad-form-header`);
 
 const mainPin = document.querySelector(`.map__pin--main`);
 const advertisementFormElements = document.querySelectorAll(`.ad-form__element`);
-const getDisabledCollectionElements = (elements) => {
+const advertisementAdressInput = document.querySelector(`#address`);
+
+// до активации формы: считаем координаты середины главного пина
+const mainPinHightWidth = 65; // ширина и высота равны
+const leftValueMainPin = mainPin.offsetLeft; // числовое значение left
+const topValueMainPin = mainPin.offsetTop; // числовое значение top
+
+const halfMainPin = Math.round((mainPinHightWidth / 2)); // так как по дефолту нужен центр главного пина - ищем половину ширины/высоты
+const defaultAddressX = leftValueMainPin + halfMainPin; // левый верхний угол пина + половинка пина по "x" и по "y" = центр пина
+const defaultAddressY = topValueMainPin + halfMainPin;
+
+advertisementAdressInput.value = defaultAddressX + `, ` + defaultAddressY;// записываем координаты в строку адрес
+
+const roomElement = document.querySelector(`#room_number`);
+const guestElement = document.querySelector(`#capacity`);
+
+// считаем координаты указателя пина после активации
+const mainPinPointerHight = 22;
+const addressX = defaultAddressX; // по горизонтали ничего не меняется
+const addressY = defaultAddressY + halfMainPin + mainPinPointerHight;// от центра идем вниз до края круглой части пина, и ниже в высоту указателя
+
+const setAdvertisementAddressValue = () => {
+  advertisementAdressInput.value = addressX + `, ` + addressY;// записываем координаты в строку адрес
+};
+
+const disableHTMLElements = (elements) => {
   for (let element of elements) {
-    element.setAttribute(`disabled`, `disabled`);
+    element.setAttribute(`disabled`, `true`);
   }
 };
 
-const getNotActiveMode = () => {
-  getDisabledCollectionElements(mapFilters);
-  getDisabledCollectionElements(advertisementFormElements);
-  advertisementFormHeader.setAttribute(`disabled`, `disabled`);
+const setUnactiveMode = () => {
+  disableHTMLElements(mapFilters);
+  disableHTMLElements(advertisementFormElements);
+  advertisementFormHeader.setAttribute(`disabled`, `true`);
 };
-getNotActiveMode();
+setUnactiveMode();
 
-const getActiveCollectionElements = (elements) => {
+const setActiveCollectionElements = (elements) => {
   for (let element of elements) {
-    element.removeAttribute(`disabled`, `disabled`);
+    element.removeAttribute(`disabled`, `true`);
   }
 };
-
-const getActiveMode = () => {
+// активное состояние
+const setActiveMode = () => {
   mapBlock.classList.remove(`map--faded`);
-  advertisementFormHeader.removeAttribute(`disabled`, `disabled`);
+  advertisementFormHeader.removeAttribute(`disabled`, `true`);
+  setActiveCollectionElements(advertisementFormElements);
 
-  getActiveCollectionElements(advertisementFormElements);
-  getActiveCollectionElements(mapFilters);
+  setActiveCollectionElements(mapFilters);
   advertisementForm.classList.remove(`ad-form--disabled`);
+  setAdvertisementAddressValue();
+
+  if (Number(roomElement.value) < Number(guestElement.value)) { // тут проверка значений селектов комнат и гостей сразу после активации
+    roomElement.setCustomValidity(`Ошибка!Размещение в 1-ой комнате расчитано только на 1 гостя.
+    Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя"`);
+  }// без этой проверки, если пользователь не меняет никакое значение в комнатах и гостях и тыкает сабмит, будет отправляться неправильные "1 комната для 3 гостей"
 };
 
-mainPin.addEventListener(`mousedown`, function (evt) {
-  if (evt.which === 1) {
-    getActiveMode();
-  }
-});
+let isEnabledActiveMode = false;
 
-mainPin.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
-    getActiveMode();
+const enableActiveModeEventListener = (evt) => {
+  // если уже включили активный режим, то при клике ничего не делаем
+  if (isEnabledActiveMode) {
+    return;
   }
-});
 
-// заполнение поля адрес
+  if (evt.which === 1 || evt.key === `Enter`) {
+    setActiveMode();
+    isEnabledActiveMode = true;
+    mainPin.removeEventListener(`mousedown`, enableActiveModeEventListener);
+    mainPin.removeEventListener(`keydown`, enableActiveModeEventListener);
+  }
+};
+// когда идет клик или нажатие на кнопку- отрабатывает все по порядку, потом remove слушателей
+mainPin.addEventListener(`mousedown`, enableActiveModeEventListener);
+mainPin.addEventListener(`keydown`, enableActiveModeEventListener);
 
 // валидация гостей и комнат
-const rooms = document.querySelector(`#room_number`);
-const roomNumbers = rooms.querySelectorAll(`option`);
-const guests = document.querySelector(`#capacity`);
-const guestsNumber = guests.querySelectorAll(`option`);
 
-guests.onchange = () => {
-  for (let roomNumber of roomNumbers) {
-    if (roomNumber.value === 1 && guestsNumber.value !== 1) {
-      guests.setCustomValidity(`Ошибка!Размещение в 1-ой комнате расчитано только на 1 гостя. Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя"`);
-    }
-    if (roomNumber.value === 2 && guestsNumber.value !== 1 || guestsNumber.value !== 2) {
-      guests.setCustomValidity(`Ошибка!Размещение в 2-х комнатах расчитано только на 1 гостя или на 2-х гостей. Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя" или "для 2 гостей"`);
-    }
-    if (roomNumber.value === 3 && guestsNumber.value !== 1 || guestsNumber.value !== 2 || guestsNumber.value !== 3) {
-      guests.setCustomValidity(`Ошибка!Размещение в 3-х комнатах расчитано только на 1 гостя, 2-х гостей или 3-ч гостей. Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя", "для 2 гостей" или "для 3 гостей"`);
-    }
-    if (roomNumber.value === 100 && guestsNumber.value === 1 || guestsNumber.value === 2 || guestsNumber.value === 3) {
-      guests.setCustomValidity(`Ошибка!При выборе 100 комнат действуют специальные условия! Пожалуйста выберете в графе "Количество мест" пункт "не для гостей"`);
-    }
+const validationRules = {
+  1: {
+    validate: (guests) => {
+      return guests !== 1;
+    },
+    text: `Ошибка!Размещение в 1-ой комнате расчитано только на 1 гостя.
+    Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя"`
+  },
+
+  2: {
+    validate: (guests) => {
+      return guests === 0 || guests === 3;
+    },
+    text: `Ошибка!Размещение в 2-х комнатах расчитано только на 1 гостя или на 2-х гостей.
+    Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя" или "для 2 гостей"`
+  },
+
+  3: {
+    validate: (guests) => {
+      return guests === 0;
+    },
+    text: `Ошибка!Размещение в 3-х комнатах расчитано только на 1 гостя, 2-х гостей или 3-ч гостей.
+    Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя", "для 2 гостей" или "для 3 гостей"`
+  },
+
+  100: {
+    validate: (guests) => {
+      return guests !== 0;
+    },
+    text: `Ошибка!При выборе 100 комнат действуют специальные условия!
+    Пожалуйста выберете в графе "Количество мест" пункт "не для гостей"`
   }
 };
+
+function validateInput(rooms, guests) {
+  const roomsValue = Number(rooms);// переводим дефолтное строчное значение roomsValue в число
+  const guestsValue = Number(guests);// также как и с roomsValue
+
+  const validationRule = validationRules[roomsValue];
+
+  if (validationRule.validate(guestsValue)) {
+    roomElement.setCustomValidity(validationRule.text);
+  } else {
+    roomElement.setCustomValidity(``);
+  }
+}
+
+// вешаем обработчик на select с комнатами (#room_number), так как значение текущего option переходят в select
+roomElement.addEventListener(`input`, (evt) => {
+  const target = evt.target; // элемент на котором случилось событие
+  const roomValue = target.value; // значение элемента, на котором случилось событие
+  const guestValue = guestElement.value; // значение селекта #capacity = значение текущего option
+
+  validateInput(roomValue, guestValue);
+});
+
+// вешаем такой же обработчик событий как и на roomElement
+guestElement.addEventListener(`input`, (evt) => {
+  const target = evt.target;
+  const guestValue = target.value; // тут уже отслеживаем значение для guest
+  const roomValue = roomElement.value;
+
+  validateInput(roomValue, guestValue);
+});
