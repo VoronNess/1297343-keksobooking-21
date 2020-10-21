@@ -238,18 +238,18 @@ const leftValueMainPin = mainPin.offsetLeft; // числовое значени�
 const topValueMainPin = mainPin.offsetTop; // числовое значение top
 
 const halfMainPin = Math.round((mainPinHightWidth / 2)); // так как по дефолту нужен центр главного пина - ищем половину ширины/высоты
-const defaultAddressX = leftValueMainPin + halfMainPin; // левый верхний угол пина + половинка пина по "x" и по "y" = центр пина
-const defaultAddressY = topValueMainPin + halfMainPin;
+const DEFAULT_ADDRESS_X = leftValueMainPin + halfMainPin; // левый верхний угол пина + половинка пина по "x" и по "y" = центр пина
+const DEFAULT_ADDRESS_Y = topValueMainPin + halfMainPin;
 
-advertisementAdressInput.value = defaultAddressX + `, ` + defaultAddressY;// записываем координаты в строку адрес
+advertisementAdressInput.value = DEFAULT_ADDRESS_X + `, ` + DEFAULT_ADDRESS_Y;// записываем координаты в строку адрес
 
 const roomElement = document.querySelector(`#room_number`);
 const guestElement = document.querySelector(`#capacity`);
 
 // считаем координаты указателя пина после активации
-const mainPinPointerHight = 22;
-const addressX = defaultAddressX; // по горизонтали ничего не меняется
-const addressY = defaultAddressY + halfMainPin + mainPinPointerHight;// от центра идем вниз до края круглой части пина, и ниже в высоту указателя
+const mainPinPointerHeight = 22;
+const addressX = DEFAULT_ADDRESS_X;// по горизонтали ничего не меняется
+const addressY = DEFAULT_ADDRESS_Y + halfMainPin + mainPinPointerHeight;// от центра идем вниз до края круглой части пина, и ниже в высоту указателя
 
 const setAdvertisementAddressValue = () => {
   advertisementAdressInput.value = addressX + `, ` + addressY;// записываем координаты в строку адрес
@@ -270,13 +270,13 @@ setUnactiveMode();
 
 const setActiveCollectionElements = (elements) => {
   for (let element of elements) {
-    element.removeAttribute(`disabled`, `true`);
+    element.removeAttribute(`disabled`);
   }
 };
 // активное состояние
 const setActiveMode = () => {
   mapBlock.classList.remove(`map--faded`);
-  advertisementFormHeader.removeAttribute(`disabled`, `true`);
+  advertisementFormHeader.removeAttribute(`disabled`);
   setActiveCollectionElements(advertisementFormElements);
 
   setActiveCollectionElements(mapFilters);
@@ -344,7 +344,7 @@ const validationRules = {
   }
 };
 
-function validateInput(rooms, guests) {
+const validateInput = (rooms, guests) => {
   const roomsValue = Number(rooms);// переводим дефолтное строчное значение roomsValue в число
   const guestsValue = Number(guests);// также как и с roomsValue
 
@@ -355,7 +355,7 @@ function validateInput(rooms, guests) {
   } else {
     roomElement.setCustomValidity(``);
   }
-}
+};
 
 // вешаем обработчик на select с комнатами (#room_number), так как значение текущего option переходят в select
 roomElement.addEventListener(`input`, (evt) => {
@@ -364,6 +364,7 @@ roomElement.addEventListener(`input`, (evt) => {
   const guestValue = guestElement.value; // значение селекта #capacity = значение текущего option
 
   validateInput(roomValue, guestValue);
+  roomElement.reportValidity();
 });
 
 // вешаем такой же обработчик событий как и на roomElement
@@ -373,4 +374,5 @@ guestElement.addEventListener(`input`, (evt) => {
   const roomValue = roomElement.value;
 
   validateInput(roomValue, guestValue);
+  guestElement.reportValidity();
 });
