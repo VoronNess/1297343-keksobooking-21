@@ -16,7 +16,7 @@
     }
   };
 
-  const renderPins = (array) => {
+  const renderAll = (array) => {
     for (let i = 0; i < array.length; i++) {
       const pinElement = pinsTemplate.cloneNode(true);
 
@@ -40,7 +40,7 @@
   };
 
   window.pin = {
-    renderPins,
+    renderAll,
     activeModeEventListener,
   };
 })();

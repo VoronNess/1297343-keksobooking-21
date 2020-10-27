@@ -12,8 +12,8 @@
   const guestElement = document.querySelector(`#capacity`);
 
   // const createdArray = window.mock_data.createMapCards(8);
-  // window.pin.renderPins(createdArray);
-  // window.card.setCardInfo(createdArray);
+  // window.pin.renderAll(createdArray);
+  // window.card.setInfo(createdArray);
 
   const setInactive = () => {
     window.main.isActive = false;

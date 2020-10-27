@@ -24,7 +24,7 @@
   const cardPhotoes = cardElement.querySelector(`.popup__photos`);
   const cardPhotoesImg = cardPhotoes.querySelector(`img`);
 
-  const setCardInfo = (array) => {
+  const setInfo = (array) => {
     cardAvatar.src = array[0].author.avatar;
     cardTitle.textContent = array[0].offer.title;
 
@@ -60,6 +60,6 @@
   };
 
   window.card = {
-    setCardInfo,
+    setInfo,
   };
 })();

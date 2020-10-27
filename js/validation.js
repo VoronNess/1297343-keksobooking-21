@@ -8,7 +8,7 @@
   const ROOM_FOR_THREE_VALIDATION_KEY = 3;
   const ROOM_NOT_FOR_GUESTS_VALIDATION_KEY = 100;
 
-  const validationRules = {
+  const guestsAndRoomsRules = {
     [ROOM_FOR_ONE_VALIDATION_KEY]: {
       validate: (guests) => {
         return guests !== 1;
@@ -42,11 +42,11 @@
     }
   };
 
-  const validateInput = (rooms, guests) => {
+  const guestsAndRoomsInputs = (rooms, guests) => {
     const roomsValue = Number(rooms);// переводим дефолтное строчное значение roomsValue в число
     const guestsValue = Number(guests);// также как и с roomsValue
 
-    const validationRule = window.validation.validationRules[roomsValue];
+    const validationRule = window.validation.guestsAndRoomsRules[roomsValue];
 
     if (validationRule.validate(guestsValue)) {
       roomElement.setCustomValidity(validationRule.text);
@@ -78,8 +78,8 @@
   };
 
   window.validation = {
-    validationRules,
-    validateInput,
+    guestsAndRoomsRules,
+    guestsAndRoomsInputs,
 
     roomElementListener,
     guestElementListener,
