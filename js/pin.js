@@ -47,11 +47,9 @@
 
   const getPinsLeftCoordinatesArray = () => {
     const renderedPins = pins.querySelectorAll(`.map__pin`);
-    console.log(renderedPins);
     for (let renderedPin of renderedPins) {
       renderedPinsLeftValueArray.push(renderedPin.offsetLeft);
     }
-    console.log(renderedPinsLeftValueArray);
     return renderedPinsLeftValueArray;
   };
 
@@ -61,7 +59,6 @@
     for (let renderedPin of renderedPins) {
       renderedPinsTopValueArray.push(renderedPin.offsetTop);
     }
-    console.log(renderedPinsTopValueArray);
     return renderedPinsTopValueArray;
   };
 

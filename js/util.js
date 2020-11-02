@@ -56,7 +56,6 @@ const getAddressValueArray = (array1, array2, count) => {
     const addressValue = `` + (array1[i] + window.constants.HALF_RENDERED_PIN_WIDTH) + `` + `,` + `` + (array2[i] + window.constants.RENDERED_PIN_HEIGHT) + ``;
     addressValueArray.push(addressValue);
   }
-  console.log(addressValueArray);
   return addressValueArray;
 };
 

@@ -40,8 +40,6 @@
       cards.push(cardInfo);
       addressValues.push(cardInfo.address);
     }
-    console.log(cards);
-    console.log(addressValues);
     return cards;// массив с объектами
   };
 
@@ -102,7 +100,6 @@
     let i = 1;
     for (let renderedCard of renderedCards) {
       const cardAddress = renderedCard.querySelector(`.popup__text--address`);
-      console.log(cardAddress);
       cardAddress.textContent = array[i++];
     }
   };
