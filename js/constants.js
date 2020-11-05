@@ -2,14 +2,14 @@
 
 (function () {
   const ADVERTISEMENT_TITLES = [
-    `И снова Торонто!`,
-    `Нью-Йорк, Нью-Йорк!`,
-    `Велкам ту Сингапур!`,
-    `Здравствуй, Прага!`,
-    `Бонжур, Париж!`,
-    `Будапешт, Hello!`,
-    `Панама-Нама`,
-    `Свободный Амстердам`
+    `Трешка за цент!`,
+    `Не дорого, но и не богато.`,
+    `До центра - рукой подать!`,
+    `Тишина и покой`,
+    `Места хватит всееем!`,
+    `Ми-ми-ми-шный интерьер ^_^`,
+    `Накормим, напоим, спать уложим`,
+    `"the Best" of "The Best"`
   ];
 
   const ADVERTISEMENT_TYPES = [
@@ -37,6 +37,7 @@
     `parking`,
     `washer`
   ];
+
   const ADVERTISEMENT_DESCRIPTIONS = [
     `qui ratione voluptatem sequi nesciunt`,
     `quia voluptas sit`,
@@ -47,7 +48,7 @@
   const ADVERTISEMENT_PHOTOS = [
     `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
     `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
-    `http://o0.github.io/assets/images/tokyo/hotel1.jpg`
+    `http://o0.github.io/assets/images/tokyo/hotel3.jpg`,
   ];
 
   const MIN_PRICE_RANGE = 1000;

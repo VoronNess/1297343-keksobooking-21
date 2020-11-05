@@ -12,24 +12,16 @@
   const addressX = DEFAULT_ADDRESS_X;
   const addressY = DEFAULT_ADDRESS_Y + window.constants.HALF_MAIN_PIN + window.constants.MAIN_PIN_POINTER_HEIGHT;
 
-  const setDefultAddressCoordinates = () => {
-    advertisementAddressInput.value = DEFAULT_ADDRESS_X + `, ` + DEFAULT_ADDRESS_Y;// записываем координаты в строку адрес
+  const setDefaultAddressCoordinates = () => {
+    advertisementAddressInput.value = DEFAULT_ADDRESS_X + `, ` + DEFAULT_ADDRESS_Y;
   };
 
   const updateAddressCoordinates = () => {
-    advertisementAddressInput.value = addressX + `, ` + addressY;// записываем координаты в строку адрес
+    advertisementAddressInput.value = addressX + `, ` + addressY;
   };
 
-  // адресс для второстепенных пинов - наверное часть убрать  в pin
-
-  // const pins = document.querySelector(`.map__pins`);// change name of variable - pinsConteiner
-  // const renderedPins = pins.querySelectorAll(`.map__pin`);
-
-  // потом надо каждое значение offsetLeft и offsetRight
-
-
   window.form = {
-    setDefultAddressCoordinates,
+    setDefaultAddressCoordinates,
     updateAddressCoordinates,
   };
 })();
