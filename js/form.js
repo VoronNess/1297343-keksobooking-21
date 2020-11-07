@@ -20,8 +20,12 @@
     advertisementAddressInput.value = addressX + `, ` + addressY;
   };
 
+  const currentAddressCoordinates = (x, y) => {
+    advertisementAddressInput.value = x + `, ` + y;
+  };
   window.form = {
     setDefaultAddressCoordinates,
     updateAddressCoordinates,
+    currentAddressCoordinates,
   };
 })();

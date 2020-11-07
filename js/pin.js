@@ -12,8 +12,17 @@
       return;
     }
     window.main.setActive();
+
     mainPin.removeEventListener(`mousedown`, createActiveListener);
     mainPin.removeEventListener(`keydown`, createActiveListener);
+  };
+
+  const pageIsActiveListener = () => {
+    if (window.main.isActive) {
+      return;
+    }
+    mainPin.addEventListener(`mousedown`, createActiveListener);
+    mainPin.addEventListener(`keydown`, createActiveListener);
   };
 
   const addElementListener = (renderedPin) => {
@@ -46,14 +55,6 @@
     }
   };
 
-  const pageIsActiveListener = () => {
-    if (window.main.isActive) {
-      return;
-    }
-
-    mainPin.addEventListener(`mousedown`, createActiveListener);
-    mainPin.addEventListener(`keydown`, createActiveListener);
-  };
 
   window.pin = {
     renderAllElements,

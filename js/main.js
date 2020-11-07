@@ -47,6 +47,7 @@
 
     window.validation.addTimeoutListener();
     window.util.renderCardsAndPins(window.mockData.advertisments);
+    window.mainPinMove.addElementMovingListener();
 
     if (Number(roomElement.value) < Number(guestElement.value)) {
       roomElement.setCustomValidity(`Ошибка!Размещение в 1-ой комнате расчитано только на 1 гостя.
