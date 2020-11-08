@@ -2,64 +2,132 @@
 
 (function () {
   const mapBlock = document.querySelector(`.map`);
-  const cardsTemplate = document.querySelector(`#card`)
+  const cardTemplate = document.querySelector(`#card`)
   .content
   .querySelector(`.map__card`);
 
   const mapFiltersContainer = mapBlock.querySelector(`.map__filters-container`);
 
-  const cardElement = cardsTemplate.cloneNode(true);
-  const cardAvatar = cardElement.querySelector(`.popup__avatar`);
-  const cardTitle = cardElement.querySelector(`.popup__title`);
+  const setCapacityStr = (array, element) => {
+    const roomWordEnding = window.util.pluralizeWord(array.offer.rooms, [`комната`, `комнаты`]);
+    const guestWordEnding = window.util.pluralizeWord(array.offer.guests, [`гостя`, `гостей`]);
+    const capacityStr = array.offer.rooms + ` ` + roomWordEnding + ` для ` + array.offer.guests + ` ` + guestWordEnding;
 
-  const cardAddress = cardElement.querySelector(`.popup__text--address`);
-  const cardPrice = cardElement.querySelector(`.popup__text--price`);
-  const cardType = cardElement.querySelector(`.popup__type`);
-
-  const cardRoomsGuests = cardElement.querySelector(`.popup__text--capacity`);
-  const cardTime = cardElement.querySelector(`.popup__text--time`);
-  const cardFeatures = cardElement.querySelector(`.popup__features`);
-
-  const cardDescription = cardElement.querySelector(`.popup__description`);
-  const cardPhotoes = cardElement.querySelector(`.popup__photos`);
-  const cardPhotoesImg = cardPhotoes.querySelector(`img`);
-
-  const setCardInfo = (array) => {
-    cardAvatar.src = array[0].author.avatar;
-    cardTitle.textContent = array[0].offer.title;
-
-    cardAddress.textContent = array[0].offer.address;
-    cardPrice.textContent = array[0].offer.price + `₽/ночь`;
-
-    for (let i = 0; i <= window.constants.ADVERTISEMENT_TYPES.length; i++) {
-      const currentType = window.constants.ADVERTISEMENT_TYPES[i];
-
-      if (array[0].offer.type === currentType) {
-        cardType.textContent = currentType.translation;
-      }
-    }
-
-    const roomsEnding = window.util.pluralizeWord(array[0].offer.rooms, [`комната`, `комнаты`]);
-    const guestsEnding = window.util.pluralizeWord(array[0].offer.guests, [`гостя`, `гостей`]);
-
-    cardRoomsGuests.textContent = array[0].offer.rooms + ` ` + roomsEnding +
-    ` для ` + array[0].offer.guests + ` ` + guestsEnding;
-
-    cardTime.textContent = `Заезд после ` + array[0].offer.checkin +
-    `, выезд до ` + array[0].offer.checkout;
-
-    cardFeatures.textContent = array[0].offer.features;
-    cardDescription.textContent = array[0].offer.description;
-    cardPhotoesImg.src = array[0].offer.photos[window.util.getRandomRangeElement(0, 1)];
-
-    const photoesImgClone = cardPhotoesImg.cloneNode(true);
-    cardPhotoes.appendChild(photoesImgClone);
-    cardPhotoesImg.src = array[0].offer.photos[window.util.getRandomRangeElement(0, 1)];
-
-    mapBlock.insertBefore(cardElement, mapFiltersContainer);
+    element.querySelector(`.popup__text--capacity`).textContent = capacityStr;
   };
 
+  const setTypeStr = (element, data) => {
+    for (let i = 0; i < window.constants.ADVERTISEMENT_TYPES.length; i++) {
+      const currentType = window.constants.ADVERTISEMENT_TYPES[i];
+
+      if (data.offer.type === currentType.id) {
+        element.querySelector(`.popup__type`).textContent = currentType.translation;
+      }
+    }
+  };
+
+  const setPhotosBlock = (element, mock) => {
+    const cardPhotos = element.querySelector(`.popup__photos`);
+    const cardPhotosImg = cardPhotos.querySelector(`img`);
+
+    for (const photoUrl of mock.offer.photos) {
+      cardPhotosImg.src = photoUrl;
+      const image = cardPhotosImg.cloneNode(true);
+      image.src = photoUrl;
+
+      cardPhotos.appendChild(image);
+    }
+  };
+
+  const createCommonConteiner = () => {
+    const cardsConteiner = document.createElement(`div`);
+    mapBlock.insertBefore(cardsConteiner, mapFiltersContainer);
+    cardsConteiner.classList.add(`cards-conteiner`);
+  };
+
+  const closeElement = () => {
+    const cardsConteiner = document.querySelector(`.cards-conteiner`);
+    const cards = cardsConteiner.querySelectorAll(`.map__card`);
+
+    for (let card of cards) {
+      card.classList.add(`hidden`);
+    }
+  };
+
+  const addElementListener = (element) => {
+    element.querySelector(`.popup__close`).addEventListener(`click`, (evt) => {
+      if (evt.which === 1) {
+        closeElement();
+      }
+    });
+
+    window.addEventListener(`keydown`, (evt) => {
+      if (evt.key === `Escape`) {
+        closeElement();
+      }
+    });
+  };
+
+  const renderElement = (element, data) => {
+    const cardMock = data;
+    addElementListener(element);
+
+    element.setAttribute(`id`, data.offer.id);
+    element.querySelector(`.popup__avatar`).src = data.author.avatar;
+    element.querySelector(`.popup__title`).textContent = data.offer.title;
+
+    element.querySelector(`.popup__text--address`).textContent =
+    (window.constants.MOVE_X + data.location.x + window.constants.HALF_RENDERED_PIN_WIDTH) +
+    `, ` + (window.constants.MOVE_Y + data.location.y + window.constants.RENDERED_PIN_HEIGHT);
+
+    setTypeStr(element, data);
+
+    setCapacityStr(data, element);
+
+    element.querySelector(`.popup__text--price`).textContent = data.offer.price + ` ₽/ночь`;
+    element.querySelector(`.popup__text--time`).textContent = `Заезд после ` + data.offer.checkin +
+    `, выезд до ` + data.offer.checkout;
+
+    element.querySelector(`.popup__features`).textContent = data.offer.features;
+    element.querySelector(`.popup__description`).textContent = data.offer.description;
+
+    setPhotosBlock(element, cardMock);
+  };
+
+  const renderAllElements = (array) => {
+    createCommonConteiner();
+    const cardsConteiner = document.querySelector(`.cards-conteiner`);
+
+    for (let i = 0; i < array.length; i++) {
+      const cardElement = cardTemplate.cloneNode(true);
+      renderElement(cardElement, array[i]);
+
+      cardElement.classList.add(`hidden`);
+      cardsConteiner.appendChild(cardElement);
+    }
+  };
+
+  const hideAllElements = () => {
+    const cards = document.querySelectorAll(`.map__card`);
+
+    cards.forEach((card) => {
+      card.classList.add(`hidden`);
+    });
+  };
+
+  const openElement = (pin) => {
+    const id = pin.getAttribute(`id`);
+    const cardsConteiner = document.querySelector(`.cards-conteiner`);
+    const card = cardsConteiner.querySelector(`#${id}`);
+
+    hideAllElements();
+
+    card.classList.remove(`hidden`);
+  };
+
+
   window.card = {
-    setCardInfo,
+    renderAllElements,
+    openElement,
   };
 })();
