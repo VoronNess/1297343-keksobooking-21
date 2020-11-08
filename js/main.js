@@ -10,6 +10,7 @@
   const roomElement = document.querySelector(`#room_number`);
 
   const guestElement = document.querySelector(`#capacity`);
+  const mainPin = document.querySelector(`.map__pin--main`);
 
   const setInactive = () => {
     window.main.isActive = false;
@@ -19,7 +20,7 @@
 
     advertisementFormHeader.setAttribute(`disabled`, `true`);
 
-    window.form.setDefaultAddressCoordinates();
+    window.form.setAddressCoordinates(mainPin, window.constants.DEFAULT_ADDRESS_X, window.constants.DEFAULT_ADDRESS_Y);
     window.pin.pageIsActiveListener();
   };
 
@@ -35,7 +36,7 @@
 
     window.util.setEnableHTMLElements(mapFilters);
     advertisementForm.classList.remove(`ad-form--disabled`);
-    window.form.updateAddressCoordinates();
+    window.form.setAddressCoordinates(mainPin, window.constants.PAGE_IS_ACTIVE_ADDRESS_X, window.constants.PAGE_IS_ACTIVE_ADDRESS_Y);
 
     window.validation.addTitleInputListener();
     window.validation.addPriceInputListener();
@@ -47,7 +48,6 @@
 
     window.validation.addTimeoutListener();
     window.util.renderCardsAndPins(window.mockData.advertisments);
-    window.mainPinMove.addElementMovingListener();
 
     if (Number(roomElement.value) < Number(guestElement.value)) {
       roomElement.setCustomValidity(`Ошибка!Размещение в 1-ой комнате расчитано только на 1 гостя.

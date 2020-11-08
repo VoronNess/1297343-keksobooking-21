@@ -1,65 +1,75 @@
 'use strict';
+
 (function () {
   const pinsConteiner = document.querySelector(`.map__pins`);
   const mainPin = pinsConteiner.querySelector(`.map__pin--main`);
 
-  const addElementMovingListener = () => {
-    mainPin.addEventListener(`mousedown`, (evt) => {
-      let dragged = false;
+  mainPin.style.zIndex = 1000;
 
-      const shiftX = evt.clientX - mainPin.getBoundingClientRect().left;
-      const shiftY = evt.clientY - mainPin.getBoundingClientRect().top;
+  mainPin.addEventListener(`mousedown`, (evt) => {
+    evt.preventDefault();
 
-      const moveAt = (pageX, pageY) => {
-        mainPin.style.left = pageX - shiftX + `px`;
-        mainPin.style.top = pageY - shiftY + `px`;
+    let startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
 
-        const currentX = mainPin.offsetLeft;
-        const currentY = mainPin.offsetTop;
+    let dragged = false;
 
-        const pinCenterCurrentX = currentX + window.constants.HALF_MAIN_PIN;
-        const pinCenterCurrentY = currentY + window.constants.HALF_MAIN_PIN + window.constants.MAIN_PIN_POINTER_HEIGHT;
+    const onMouseMove = (moveEvt) => {
+      moveEvt.preventDefault();
 
-        window.form.currentAddressCoordinates(pinCenterCurrentX, pinCenterCurrentY);
+
+      dragged = true;
+
+      const shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
       };
 
-      const onMouseMove = (moveEvt) => {
-        moveEvt.preventDefault();
-
-        moveAt(moveEvt.pageX, moveEvt.pageY);
-
-        dragged = true;
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
       };
 
+      const styleY = mainPin.offsetTop - shift.y;
 
-      const onMouseUp = (upEvt) => {
-        evt.preventDefault();
+      if (styleY < 130) {
+        styleY = 130;
+      }
 
-        document.removeEventListener(`mousemove`, onMouseMove);
-        document.removeEventListener(`mouseup`, onMouseUp);
+      if (styleY > 630) {
+        styleY = 630;
+      }
 
-        if (dragged) {
-          const onClickPreventDefault = (clickEvt) => {
-            clickEvt.preventDefault();
+      mainPin.style.top = (mainPin.offsetTop - shift.y) + `px`;
+      mainPin.style.left = (mainPin.offsetLeft - shift.x) + `px`;
 
-            mainPin.removeEventListener(`click`, onClickPreventDefault);
-          };
+      window.form.setAddressCoordinates(mainPin, window.constants.PAGE_IS_ACTIVE_ADDRESS_X, window.constants.PAGE_IS_ACTIVE_ADDRESS_Y);
+    };
 
-          mainPin.addEventListener(`click`, onClickPreventDefault);
+    const onMouseUp = (upEvt) => {
+      upEvt.preventDefault();
 
-        }
-        upEvt.preventDefault();
+      document.removeEventListener(`mousemove`, onMouseMove);
+      document.removeEventListener(`mouseup`, onMouseUp);
 
-      };
+      if (dragged) {
+        const onClickPreventDefault = (clickEvt) => {
+          clickEvt.preventDefault();
 
-      document.addEventListener(`mousemove`, onMouseMove);
-      document.addEventListener(`mouseup`, onMouseUp);
+          mainPin.removeEventListener(`click`, onClickPreventDefault);
+        };
 
+        mainPin.addEventListener(`click`, onClickPreventDefault);
 
-    });
-  };
+      }
+      upEvt.preventDefault();
 
-  window.mainPinMove = {
-    addElementMovingListener
-  };
+    };
+
+    document.addEventListener(`mousemove`, onMouseMove);
+    document.addEventListener(`mouseup`, onMouseUp);
+  });
+
 })();
