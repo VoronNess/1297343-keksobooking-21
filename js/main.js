@@ -7,25 +7,21 @@
 
   const advertisementFormHeader = document.querySelector(`.ad-form-header`);
   const advertisementFormElements = document.querySelectorAll(`.ad-form__element`);
-
   const roomElement = document.querySelector(`#room_number`);
-  const guestElement = document.querySelector(`#capacity`);
 
-  // const createdArray = window.mock_data.createMapCards(8);
-  // window.pin.renderPins(createdArray);
-  // window.card.setCardInfo(createdArray);
+  const guestElement = document.querySelector(`#capacity`);
+  const mainPin = document.querySelector(`.map__pin--main`);
 
   const setInactive = () => {
     window.main.isActive = false;
+
     window.util.disableHTMLElements(mapFilters);
-
     window.util.disableHTMLElements(advertisementFormElements);
-    advertisementFormHeader.setAttribute(`disabled`, `true`);
-    window.form.setDefultAddressCoordinates();
 
-    window.pin.activeModeEventListener();
-    window.validation.roomElementListener();
-    window.validation.guestElementListener();
+    advertisementFormHeader.setAttribute(`disabled`, `true`);
+
+    window.form.setAddressCoordinates(mainPin, window.constants.DEFAULT_ADDRESS_X, window.constants.DEFAULT_ADDRESS_Y);
+    window.pin.pageIsActiveListener();
   };
 
   const setActive = () => {
@@ -36,11 +32,22 @@
 
     mapBlock.classList.remove(`map--faded`);
     advertisementFormHeader.removeAttribute(`disabled`);
-    window.util.setAbleHTMLElements(advertisementFormElements);
+    window.util.setEnableHTMLElements(advertisementFormElements);
 
-    window.util.setAbleHTMLElements(mapFilters);
+    window.util.setEnableHTMLElements(mapFilters);
     advertisementForm.classList.remove(`ad-form--disabled`);
-    window.form.updateAddressCoordinates();
+    window.form.setAddressCoordinates(mainPin, window.constants.PAGE_IS_ACTIVE_ADDRESS_X, window.constants.PAGE_IS_ACTIVE_ADDRESS_Y);
+
+    window.validation.addTitleInputListener();
+    window.validation.addPriceInputListener();
+    window.validation.addTypeInputListener();
+
+    window.validation.addRoomInputListener();
+    window.validation.addGuestInputListener();
+    window.validation.addTimeinListener();
+
+    window.validation.addTimeoutListener();
+    window.util.renderCardsAndPins(window.mockData.advertisments);
 
     if (Number(roomElement.value) < Number(guestElement.value)) {
       roomElement.setCustomValidity(`Ошибка!Размещение в 1-ой комнате расчитано только на 1 гостя.
