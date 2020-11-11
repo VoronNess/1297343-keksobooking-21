@@ -51,10 +51,6 @@
     return array;
   };
 
-  const renderCardsAndPins = (createdMockArray) => {
-    window.pin.renderAllElements(createdMockArray);
-    window.card.renderAllElements(createdMockArray);
-  };
 
   window.util = {
     getRandomArrayElement,
@@ -66,6 +62,6 @@
     setEnableHTMLElements,
 
     getArrayOfNumbers,
-    renderCardsAndPins
+
   };
 })();
