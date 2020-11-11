@@ -28,6 +28,7 @@
     if (window.main.isActive) {
       return;
     }
+
     window.main.isActive = true;
 
     mapBlock.classList.remove(`map--faded`);
@@ -47,12 +48,32 @@
     window.validation.addTimeinListener();
 
     window.validation.addTimeoutListener();
-    window.util.renderCardsAndPins(window.mockData.advertisments);
 
     if (Number(roomElement.value) < Number(guestElement.value)) {
       roomElement.setCustomValidity(`Ошибка!Размещение в 1-ой комнате расчитано только на 1 гостя.
       Пожалуйста, выберете в графе "Количество мест" пункт "для 1 гостя"`);
     }
+
+    const successHandler = (serverArray) => {
+      window.pin.renderAllElements(serverArray);
+      window.card.renderAllElements(serverArray);
+    };
+
+    const errorHandler = (errorMessage) => {
+      const node = document.createElement(`div`);
+
+      node.style = `z-index: 100; margin: 0 auto; text-align: center; background-color: red;`;
+      node.style.position = `absolute`;
+      node.style.left = 0;
+
+      node.style.right = 0;
+      node.style.fontSize = `30px`;
+      node.textContent = errorMessage;
+
+      document.body.insertAdjacentElement(`afterbegin`, node);
+    };
+
+    window.load.getServerData(successHandler, errorHandler);
   };
 
   const init = () => {
