@@ -1,12 +1,12 @@
 'use strict';
 
 (function () {
-  const pinsConteiner = document.querySelector(`.map__pins`);
+  const pinsContainer = document.querySelector(`.map__pins`);
   const pinTemplate = document.querySelector(`#pin`)
   .content
   .querySelector(`.map__pin`);
 
-  const mainPin = pinsConteiner.querySelector(`.map__pin--main`);
+  const mainPin = pinsContainer.querySelector(`.map__pin--main`);
 
   const createActiveListener = () => {
     if (window.main.isActive) {
@@ -14,7 +14,7 @@
     }
     window.main.setActive();
 
-    mainPin.removeEventListener(`mousedown`, createActiveListener);
+    mainPin.removeEventListener(`mouseup`, createActiveListener);
     mainPin.removeEventListener(`keydown`, createActiveListener);
   };
 
@@ -22,7 +22,7 @@
     if (window.main.isActive) {
       return;
     }
-    mainPin.addEventListener(`mousedown`, createActiveListener);
+    mainPin.addEventListener(`mouseup`, createActiveListener);
     mainPin.addEventListener(`keydown`, createActiveListener);
   };
 
@@ -49,6 +49,9 @@
 
     element.querySelector(`img`).src = data.author.avatar;
     element.querySelector(`img`).alt = data.offer.title;
+    window.util.hideEmptyNumber(data.offer.length, element);
+
+    element.classList.add(`map__pin--rendered`);
   };
 
   const renderAllElements = (array) => {
@@ -59,55 +62,22 @@
 
       renderElement(pinElement, array[i]);
 
-      pinsConteiner.appendChild(pinElement);
+      pinsContainer.appendChild(pinElement);
       addElementListener(pinElement);
     }
   };
+  const dellAllElements = () => {
+    const pins = document.querySelectorAll(`.map__pin--rendered`);
 
-  /*
-    const renderElement = (data) => {
-    const pinElement = pinTemplate.cloneNode(true);
-
-    pinElement.setAttribute(`id`, `card_${data}`);
-
-    const pinLeftPosition = window.constants.MOVE_X + data.location.x;
-    const pinTopPosition = window.constants.MOVE_Y + data.location.y;
-
-    pinElement.style.left = `${pinLeftPosition}px`;
-    pinElement.style.top = `${pinTopPosition}px`;
-
-    pinElement.querySelector(`img`).src = data.author.avatar;
-    pinElement.querySelector(`img`).alt = data.offer.title;
-
-    return pinElement;
-  };
-
-
-  const renderAllFragments = (array) => {
-    const pinFragment = document.createDocumentFragment();
-
-    for (let i = 0; i <= window.constants.MAX_DATA_ELEMENTS_COUNT; i++) {
-
-      pinFragment.appendChild(renderElement(array[i]));
+    for (const pin of pins) {
+      pin.remove();
     }
-
-    pinsConteiner.appendChild(pinFragment);
-    addElementListener(pinFragment);
   };
-
-
-  window.pin = {
-    pageIsActiveListener,
-    addElementListener,
-    renderAllFragments,
-
-  };
-})();
-  */
 
   window.pin = {
     renderAllElements,
     pageIsActiveListener,
     addElementListener,
+    dellAllElements
   };
 })();

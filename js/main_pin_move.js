@@ -1,10 +1,10 @@
 'use strict';
 
 (function () {
-  const pinsConteiner = document.querySelector(`.map__pins`);
-  const mainPin = pinsConteiner.querySelector(`.map__pin--main`);
+  const pinsContainer = document.querySelector(`.map__pins`);
+  const mainPin = pinsContainer.querySelector(`.map__pin--main`);
 
-  mainPin.style.zIndex = 1000;
+  mainPin.style.zIndex = `2`;
 
   mainPin.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
@@ -19,7 +19,6 @@
     const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
 
-
       dragged = true;
 
       const shift = {
@@ -32,17 +31,17 @@
         y: moveEvt.clientY
       };
 
-      const styleY = mainPin.offsetTop - shift.y;
+      let styleY = mainPin.offsetTop - shift.y;
 
-      if (styleY < 130) {
-        styleY = 130;
+      if (styleY < window.constants.MIN_LOCATION_Y_RANGE) {
+        styleY = window.constants.MIN_LOCATION_Y_RANGE;
       }
 
-      if (styleY > 630) {
-        styleY = 630;
+      if (styleY > window.constants.MAX_LOCATION_Y_RANGE) {
+        styleY = window.constants.MAX_LOCATION_Y_RANGE;
       }
 
-      mainPin.style.top = (mainPin.offsetTop - shift.y) + `px`;
+      mainPin.style.top = (styleY) + `px`;
       mainPin.style.left = (mainPin.offsetLeft - shift.x) + `px`;
 
       window.form.setAddressCoordinates(mainPin, window.constants.PAGE_IS_ACTIVE_ADDRESS_X, window.constants.PAGE_IS_ACTIVE_ADDRESS_Y);
@@ -62,10 +61,9 @@
         };
 
         mainPin.addEventListener(`click`, onClickPreventDefault);
-
       }
-      upEvt.preventDefault();
 
+      upEvt.preventDefault();
     };
 
     document.addEventListener(`mousemove`, onMouseMove);
