@@ -13,7 +13,12 @@
   const ROOM_FOR_THREE_VALIDATION_KEY = 3;
   const ROOM_NOT_FOR_GUESTS_VALIDATION_KEY = 100;
 
-  const guestsAndRoomsRules = {
+  const ONE_GUEST_VALIDATION_KEY = 1;
+  const TWO_GUEST_VALIDATION_KEY = 2;
+  const THREE_GUEST_VALIDATION_KEY = 3;
+  const NOT_FOR_GUESTS_VALIDATION_KEY = 0;
+
+  const roomRules = {
 
     [ROOM_FOR_ONE_VALIDATION_KEY]: {
       validate: (guests) => {
@@ -45,6 +50,41 @@
       },
       text: `Ошибка!При выборе 100 комнат действуют специальные условия!
       Пожалуйста выберете в графе "Количество мест" пункт "не для гостей"`
+    }
+  };
+
+  const guestRules = {
+
+    [NOT_FOR_GUESTS_VALIDATION_KEY]: {
+      validate: (rooms) => {
+        return rooms !== 100;
+      },
+      text: `Ошибка! Размещение "Не для гостей", возможно только по специальным условиям.
+      Пожалуйста, выберете в графе "Количество комнат" пункт "100 комнат" и напишите в "Описании" свои пожелания"`
+    },
+
+    [ONE_GUEST_VALIDATION_KEY]: {
+      validate: (rooms) => {
+        return rooms === 100;
+      },
+      text: `Ошибка! Размещение 1 гостя возможно в 1 комнате, 2 комнатах и 3 комнатах.
+      Пожалуйста, выберете в графе "Количество комнат" один из пунктов: "1 комната", "2 комнты" или "3 комнты"`
+    },
+
+    [TWO_GUEST_VALIDATION_KEY]: {
+      validate: (rooms) => {
+        return rooms !== 2 || rooms === 100;
+      },
+      text: `Ошибка! Размещение 2 гостей возможно в 2 комнатах и 3 комнатах.
+      Пожалуйста, выберете в графе "Количество комнат" один из пунктов: "2 комнты" или "3 комнты"`
+    },
+
+    [THREE_GUEST_VALIDATION_KEY]: {
+      validate: (rooms) => {
+        return rooms !== 3;
+      },
+      text: `Ошибка! Размещение 3 гостей возможно в 3 комнатах.
+      Пожалуйста, выберете в графе "Количество комнат" пункт "3 комнты"`
     }
   };
 
@@ -116,17 +156,6 @@
       priceElement.setCustomValidity(``);
     }
   };
-  const addPriceInputListener = () => {
-    priceElement.addEventListener(`input`, (evt) => {
-      const target = evt.target;
-      const priceValue = target.value;
-      const apartmentsValue = apartmentsElement.value;
-
-      checkPriceInput(priceValue);
-      checkTypeAndPriceInput(apartmentsValue, priceValue);
-      priceElement.reportValidity();
-    });
-  };
 
   const checkTypeAndPriceInput = (apartments, price) => {
     const validationRule = typesAndPriceRules[apartments];
@@ -142,6 +171,19 @@
     }
   };
 
+  const addPriceInputListener = () => {
+    priceElement.addEventListener(`input`, (evt) => {
+      const target = evt.target;
+      const priceValue = target.value;
+      const apartmentsValue = apartmentsElement.value;
+
+      checkPriceInput(priceValue);
+      checkTypeAndPriceInput(apartmentsValue, priceValue);
+
+      priceElement.reportValidity();
+    });
+  };
+
   const addTypeInputListener = () => {
     apartmentsElement.addEventListener(`input`, (evt) => {
       const target = evt.target;
@@ -150,22 +192,21 @@
 
       checkPriceInput(priceValue);
       checkTypeAndPriceInput(apartmentsValue, priceValue);
+
       apartmentsElement.reportValidity();
     });
   };
 
-
-  const checkGuestsAndRoomsInputs = (rooms, guests) => {
+  const checkRoomInput = (rooms, guests) => {
     const roomsValue = Number(rooms);
     const guestsValue = Number(guests);
-    const validationRule = guestsAndRoomsRules[roomsValue];
+    const validationRule = roomRules[roomsValue];
 
     if (validationRule.validate(guestsValue)) {
-      roomElement.setCustomValidity(validationRule.text);
-
-    } else {
-      roomElement.setCustomValidity(``);
+      return roomElement.setCustomValidity(validationRule.text);
     }
+
+    return roomElement.setCustomValidity(``);
   };
 
   const addRoomInputListener = () => {
@@ -174,9 +215,22 @@
       const roomValue = target.value;
       const guestValue = guestElement.value;
 
-      checkGuestsAndRoomsInputs(roomValue, guestValue);
+      checkRoomInput(roomValue, guestValue);
+
       roomElement.reportValidity();
     });
+  };
+
+  const checkGuestInput = (rooms, guests) => {
+    const roomsValue = Number(rooms);
+    const guestsValue = Number(guests);
+    const validationRule1 = guestRules[guestsValue];
+
+    if (validationRule1.validate(roomsValue)) {
+      return guestElement.setCustomValidity(validationRule1.text);
+    }
+
+    return guestElement.setCustomValidity(``);
   };
 
   const addGuestInputListener = () => {
@@ -185,7 +239,8 @@
       const guestValue = target.value;
       const roomValue = roomElement.value;
 
-      window.validation.checkGuestsAndRoomsInputs(roomValue, guestValue);
+      checkGuestInput(roomValue, guestValue);
+
       guestElement.reportValidity();
     });
   };
@@ -212,7 +267,7 @@
   };
 
   const addTimeoutListener = () => {
-    timeinElement.addEventListener(`input`, () => {
+    timeoutElement.addEventListener(`input`, () => {
       checkTimeoutInput();
     });
   };
@@ -226,6 +281,5 @@
     addGuestInputListener,
     addTimeinListener,
     addTimeoutListener,
-
   };
 })();

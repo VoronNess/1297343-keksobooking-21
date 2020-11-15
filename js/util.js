@@ -51,6 +51,34 @@
     return array;
   };
 
+  const hideEmptyString = (check, hidden) => {
+    if (check === ``) {
+      hidden.classList.add(`hidden`);
+    }
+  };
+
+  const hideEmptyNumber = (check, hidden) => {
+    if (check === 0) {
+      hidden.classList.add(`hidden`);
+    }
+  };
+
+  const checkDataStringsForEmpty = (data, avatar, title, address, type, capacity, price, time, description, photos) => {
+    hideEmptyString(data.author.avatar, avatar);
+    hideEmptyString(data.offer.title, title);
+    hideEmptyString(data.offer.address, address);
+
+    hideEmptyString(data.offer.type, type);
+    hideEmptyString(data.offer.price, price);
+    hideEmptyString(data.offer.checkin, time);
+
+    hideEmptyString(data.offer.checkout, time);
+    hideEmptyString(data.offer.description, description);
+
+    hideEmptyNumber(data.offer.guests, capacity);
+    hideEmptyNumber(data.offer.rooms, capacity);
+    hideEmptyNumber(data.offer.photos.length, photos);
+  };
 
   window.util = {
     getRandomArrayElement,
@@ -62,6 +90,8 @@
     setEnableHTMLElements,
 
     getArrayOfNumbers,
-
+    hideEmptyString,
+    hideEmptyNumber,
+    checkDataStringsForEmpty
   };
 })();
