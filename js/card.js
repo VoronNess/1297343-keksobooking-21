@@ -138,6 +138,10 @@
     createCommonContainer();
     const cardsContainer = document.querySelector(`.cards-container`);
 
+    if (data.length < window.constants.MAX_DATA_ELEMENTS_COUNT) {
+      window.constants.MAX_DATA_ELEMENTS_COUNT = data.length;
+    }
+
     for (let i = 0; i <= window.constants.MAX_DATA_ELEMENTS_COUNT; i++) {
       const cardElement = cardTemplate.cloneNode(true);
       renderElement(cardElement, data[i]);

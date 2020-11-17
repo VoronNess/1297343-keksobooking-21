@@ -55,6 +55,10 @@
   };
 
   const renderAllElements = (array) => {
+    if (array.length < window.constants.MAX_DATA_ELEMENTS_COUNT) {
+      window.constants.MAX_DATA_ELEMENTS_COUNT = array.length;
+    }
+
     for (let i = 0; i < window.constants.MAX_DATA_ELEMENTS_COUNT; i++) {
       const pinElement = pinTemplate.cloneNode(true);
 

@@ -19,6 +19,29 @@
       id: `palace`,
       translation: `Дворец`
     },
+    {
+      id: `any`,
+      translation: `Любой тип жилья`
+    }
+  ];
+
+  const ADVERTISEMENT_PRICES = [
+    {
+      id: `middle`,
+      price: 10000
+    },
+    {
+      id: `low`,
+      price: 0
+    },
+    {
+      id: `high`,
+      price: 50000
+    },
+    {
+      id: `any`,
+      price: 0,
+    }
   ];
 
   const MIN_LOCATION_Y_RANGE = 130;
@@ -44,7 +67,7 @@
   const PAGE_IS_ACTIVE_ADDRESS_X = HALF_MAIN_PIN;
   const PAGE_IS_ACTIVE_ADDRESS_Y = HALF_MAIN_PIN + MAIN_PIN_POINTER_HEIGHT;
 
-  const MAX_DATA_ELEMENTS_COUNT = 8;
+  const MAX_DATA_ELEMENTS_COUNT = 5;
   const URL_GET_DATA = `https://21.javascript.pages.academy/keksobooking/data`;
   const URL_SEND_DATA = `https://21.javascript.pages.academy/keksobooking`;
 
@@ -85,5 +108,7 @@
     SHOW_MIN_ADVERTISEMENT_TITLE_LENGTH,
     MAIN_PIN_DEFUALT_LEFT,
     MAIN_PIN_DEFUALT_TOP,
+
+    ADVERTISEMENT_PRICES
   };
 })();

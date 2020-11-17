@@ -47,24 +47,17 @@
     window.validation.addTimeoutListener();
     window.form.addResetFormListener();
 
+    let serverData = [];
+
     const successHandler = (serverArray) => {
-      window.pin.renderAllElements(serverArray);
-      window.card.renderAllElements(serverArray);
+      serverData = serverArray;
+      window.filter.addApartamentsFilterListener(serverData);
+      window.filter.addPriceFilterListener(serverData);
 
     };
 
     const errorHandler = (errorMessage) => {
-      const node = document.createElement(`div`);
-
-      node.style = `z-index: 3; margin: 0 auto; text-align: center; background-color: red;`;
-      node.style.position = `absolute`;
-      node.style.left = 0;
-
-      node.style.right = 0;
-      node.style.fontSize = `30px`;
-      node.textContent = errorMessage;
-
-      document.body.insertAdjacentElement(`afterbegin`, node);
+      window.util.createErrorMessage(errorMessage);
     };
 
     window.api.getServerData(successHandler, errorHandler);
