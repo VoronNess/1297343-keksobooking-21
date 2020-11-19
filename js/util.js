@@ -64,21 +64,65 @@
   };
 
   const checkDataStringsForEmpty = (data, avatar, title, address, type, capacity, price, time, description, photos) => {
+
+    if (!avatar) {
+      avatar.classList.add(`hidden`);
+      throw new Error(`avatar для карточки не найден`);
+    }
+
+    if (!title) {
+      title.classList.add(`hidden`);
+      throw new Error(` title для карточки не найден`);
+    }
+
+    if (!address) {
+      address.classList.add(`hidden`);
+      throw new Error(`address для карточки не найден`);
+    }
+
+    if (!type) {
+      type.classList.add(`hidden`);
+      throw new Error(`type для карточки не найден`);
+    }
+
+    if (!price) {
+      price.classList.add(`hidden`);
+      throw new Error(`price для карточки не найден`);
+    }
+
+    if (!time) {
+      time.classList.add(`hidden`);
+      throw new Error(`time для карточки не найден`);
+    }
+
+    if (!description) {
+      description.classList.add(`hidden`);
+      throw new Error(`description для карточки не найден`);
+    }
+
+    if (!capacity) {
+      capacity.classList.add(`hidden`);
+      throw new Error(`capacity для карточки не найден`);
+    }
+
+    if (!photos) {
+      photos.classList.add(`hidden`);
+      throw new Error(`photos для карточки не найден`);
+    }
+
     hideEmptyString(data.author.avatar, avatar);
     hideEmptyString(data.offer.title, title);
     hideEmptyString(data.offer.address, address);
 
     hideEmptyString(data.offer.type, type);
     hideEmptyString(data.offer.price, price);
-    hideEmptyString(data.offer.checkin, time);
-
-    hideEmptyString(data.offer.checkout, time);
     hideEmptyString(data.offer.description, description);
 
     hideEmptyNumber(data.offer.guests, capacity);
     hideEmptyNumber(data.offer.rooms, capacity);
     hideEmptyNumber(data.offer.photos.length, photos);
   };
+
 
   const createErrorMessage = (errorMessage) => {
     const node = document.createElement(`div`);
@@ -94,6 +138,18 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
+  const showEmptyElementError = (element, errorText) => {
+    if (!element) {
+      throw new Error(`${errorText}`);
+    }
+  };
+
+  const showWrongElementTypeError = (element, elementType, errorText) => {
+    if (typeof element !== elementType) {
+      throw new Error(errorText);
+    }
+  };
+
   window.util = {
     getRandomArrayElement,
     getRandomRangeElement,
@@ -106,7 +162,11 @@
     getArrayOfNumbers,
     hideEmptyString,
     hideEmptyNumber,
+
     checkDataStringsForEmpty,
-    createErrorMessage
+    createErrorMessage,
+    showEmptyElementError,
+
+    showWrongElementTypeError
   };
 })();

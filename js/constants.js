@@ -25,25 +25,6 @@
     }
   ];
 
-  const ADVERTISEMENT_PRICES = [
-    {
-      id: `middle`,
-      price: 10000
-    },
-    {
-      id: `low`,
-      price: 0
-    },
-    {
-      id: `high`,
-      price: 50000
-    },
-    {
-      id: `any`,
-      price: 0,
-    }
-  ];
-
   const MIN_LOCATION_Y_RANGE = 130;
   const MAX_LOCATION_Y_RANGE = 630;
 
@@ -108,7 +89,5 @@
     SHOW_MIN_ADVERTISEMENT_TITLE_LENGTH,
     MAIN_PIN_DEFUALT_LEFT,
     MAIN_PIN_DEFUALT_TOP,
-
-    ADVERTISEMENT_PRICES
   };
 })();

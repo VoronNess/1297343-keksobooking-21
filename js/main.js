@@ -50,10 +50,15 @@
     let serverData = [];
 
     const successHandler = (serverArray) => {
+      if (!serverArray) {
+        throw new Error(`от сервера получен не тот формат данных`);
+      }
       serverData = serverArray;
       window.filter.addApartamentsFilterListener(serverData);
+      window.filter.addRoomsFilterListener(serverData);
+      window.filter.addGuestsFilterListener(serverData);
+      window.filter.addFeaturesFilterListener(serverData);
       window.filter.addPriceFilterListener(serverData);
-
     };
 
     const errorHandler = (errorMessage) => {

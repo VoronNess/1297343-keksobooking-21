@@ -41,6 +41,13 @@
   };
 
   const renderElement = (element, data) => {
+    if (typeof data === `undefined`) {
+      throw new Error(`не передали массив в параметр renderElement`);
+    }
+    if (typeof data !== `object`) {
+      throw new Error(`массив передан не в том формате в параметре renderElement`);
+    }
+
     const pinLeftPosition = window.constants.MOVE_X + data.location.x;
     const pinTopPosition = window.constants.MOVE_Y + data.location.y;
 
@@ -55,11 +62,23 @@
   };
 
   const renderAllElements = (array) => {
-    if (array.length < window.constants.MAX_DATA_ELEMENTS_COUNT) {
-      window.constants.MAX_DATA_ELEMENTS_COUNT = array.length;
+    if (typeof array === `undefined`) {
+      throw new Error(`не передали массив в параметр renderElement`);
+    }
+    if (typeof array !== `object`) {
+      throw new Error(`массив передан не в том формате в параметре renderAllElements`);
     }
 
-    for (let i = 0; i < window.constants.MAX_DATA_ELEMENTS_COUNT; i++) {
+    if (array.length === 0) {
+      return;
+    }
+    let maxElementsCount = 5;
+
+    if (array.length < maxElementsCount) {
+      maxElementsCount = array.length;
+    }
+
+    for (let i = 0; i < maxElementsCount; i++) {
       const pinElement = pinTemplate.cloneNode(true);
 
       pinElement.setAttribute(`id`, `card_${i}`);
@@ -70,6 +89,7 @@
       addElementListener(pinElement);
     }
   };
+
   const dellAllElements = () => {
     const pins = document.querySelectorAll(`.map__pin--rendered`);
 

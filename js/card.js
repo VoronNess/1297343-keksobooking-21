@@ -13,10 +13,15 @@
     const roomWordEnding = window.util.pluralizeWord(data.offer.rooms, [`комната`, `комнаты`]);
     const guestWordEnding = window.util.pluralizeWord(data.offer.guests, [`гостя`, `гостей`]);
 
-    const capacityStr = data.offer.rooms + ` ` + roomWordEnding +
-    ` для ` + data.offer.guests + ` ` + guestWordEnding;
+    const capacityString = `${data.offer.rooms} ${roomWordEnding} ${data.offer.guests} ${guestWordEnding}`;
 
-    capacity.textContent = capacityStr;
+    capacity.textContent = capacityString;
+
+    window.util.showEmptyElementError(element, `ошибка в функции setCapacityString - 1 аргумент отсутствует`);
+    window.util.showEmptyElementError(data, `ошибка в функции setCapacityString - 2 аргумент отсутствует`);
+
+    window.util.showWrongElementTypeError(element, `object`, `ошибка в функции setCapacityString - 1 аргумент передается не в том формате`);
+    window.util.showWrongElementTypeError(data, `object`, `ошибка в функции setCapacityString - 2  аргумент передается не в том формате`);
   };
 
   const setTypeString = (element, data) => {
@@ -75,6 +80,7 @@
     const newCardsContainer = document.createElement(`div`);
     mapBlock.insertBefore(newCardsContainer, mapFiltersContainer);
     newCardsContainer.classList.add(`cards-container`);
+
   };
 
   const popupCloseElement = () => {
@@ -137,13 +143,15 @@
   const renderAllElements = (data) => {
     createCommonContainer();
     const cardsContainer = document.querySelector(`.cards-container`);
+    let maxElementsCount = 5;
 
-    if (data.length < window.constants.MAX_DATA_ELEMENTS_COUNT) {
-      window.constants.MAX_DATA_ELEMENTS_COUNT = data.length;
+    if (data.length < maxElementsCount) {
+      maxElementsCount = data.length - 1;
     }
 
-    for (let i = 0; i <= window.constants.MAX_DATA_ELEMENTS_COUNT; i++) {
+    for (let i = 0; i <= maxElementsCount; i++) {
       const cardElement = cardTemplate.cloneNode(true);
+
       renderElement(cardElement, data[i]);
       cardElement.setAttribute(`id`, `card_${i}`);
 
