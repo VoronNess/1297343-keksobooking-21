@@ -39,13 +39,6 @@
 
     window.card.dellAllElements();
     window.pin.dellAllElements();
-
-    const cardsContainers = mapBlock.querySelectorAll(`.cards-container`);
-    const lastCardConteiner = cardsContainers[cardsContainers.length - 1];
-
-    if (cardsContainers.length > 0) {
-      mapBlock.removeChild(lastCardConteiner);
-    }
   };
 
   const addResetFormListener = () => {

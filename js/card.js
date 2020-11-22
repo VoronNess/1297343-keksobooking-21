@@ -16,12 +16,6 @@
     const capacityString = `${data.offer.rooms} ${roomWordEnding} ${data.offer.guests} ${guestWordEnding}`;
 
     capacity.textContent = capacityString;
-
-    window.util.showEmptyElementError(element, `ошибка в функции setCapacityString - 1 аргумент отсутствует`);
-    window.util.showEmptyElementError(data, `ошибка в функции setCapacityString - 2 аргумент отсутствует`);
-
-    window.util.showWrongElementTypeError(element, `object`, `ошибка в функции setCapacityString - 1 аргумент передается не в том формате`);
-    window.util.showWrongElementTypeError(data, `object`, `ошибка в функции setCapacityString - 2  аргумент передается не в том формате`);
   };
 
   const setTypeString = (element, data) => {
@@ -77,6 +71,12 @@
   };
 
   const createCommonContainer = () => {
+    const container = document.querySelector(`.cards-container`);
+
+    if (container) {
+      container.remove();
+    }
+
     const newCardsContainer = document.createElement(`div`);
     mapBlock.insertBefore(newCardsContainer, mapFiltersContainer);
     newCardsContainer.classList.add(`cards-container`);
@@ -120,9 +120,18 @@
     const time = element.querySelector(`.popup__text--time`);
     const description = element.querySelector(`.popup__description`);
     const photosBlock = element.querySelector(`.popup__photos`);
-    const photosImg = photosBlock.querySelector(`img`);
 
-    window.util.checkDataStringsForEmpty(data, avatar, title, address, type, capacity, price, time, description, photosImg);
+    window.util.hideEmptyString(data.author.avatar, avatar);
+    window.util.hideEmptyString(data.offer.title, title);
+    window.util.hideEmptyString(data.offer.address, address);
+
+    window.util.hideEmptyString(data.offer.type, type);
+    window.util.hideEmptyString(data.offer.price, price);
+    window.util.hideEmptyString(data.offer.description, description);
+
+    window.util.hideEmptyNumber(data.offer.guests, capacity);
+    window.util.hideEmptyNumber(data.offer.rooms, capacity);
+    window.util.hideEmptyNumber(data.offer.photos.length, photosBlock);
 
     avatar.src = data.author.avatar;
     title .textContent = data.offer.title;

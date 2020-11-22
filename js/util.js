@@ -1,29 +1,33 @@
 'use strict';
 
 (function () {
-  const getRandomArrayElement = (arr) => {
-    const i = Math.floor(Math.random() * arr.length);
-    const random = arr[i];
-    return random;
-  };
 
-  const getRandomRangeElement = (min, max) => {
-    const rand = min + Math.random() * (max + 1 - min);
-    return Math.floor(rand);
-  };
-
-  const getShuffledArray = (arr) => {
-    let j; let x; let i;
-    for (i = arr.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1));
-      x = arr[i];
-      arr[i] = arr[j];
-      arr[j] = x;
+  const checkArrayForTypeAndFull = (array) => {
+    if (typeof array === `undefined`) {
+      throw new Error(`Данные не могут быть пусты`);
     }
-    return arr;
+
+    if (!Array.isArray(array)) {
+      throw new Error(`В параметр, в котором должен быть array, передеаются данные не в том формате`);
+    }
   };
 
+  const checkElementForFull = (element) => {
+    if (typeof element === `undefined`) {
+      throw new Error(`Нет данных в запрашиваемом элементе`);
+    }
+  };
+
+  const checkElementForType = (element, type) => {
+    if (typeof element !== type) {
+      throw new Error(`В параметр передеаются данные не в том формате`);
+    }
+  };
   const pluralizeWord = (arrayElement, array) => {
+    checkArrayForTypeAndFull(array);
+    checkElementForFull(arrayElement);
+    checkElementForType(arrayElement, `number`);
+
     if (arrayElement === 1) {
       return array[0];
     } else {
@@ -43,86 +47,23 @@
     }
   };
 
-  const getArrayOfNumbers = (min, max) => {
-    const array = [];
-    for (let i = min; i <= max; i++) {
-      array.push(i);
-    }
-    return array;
-  };
-
   const hideEmptyString = (check, hidden) => {
+    checkElementForFull(hidden);
+    checkElementForFull(check);
+
     if (check === ``) {
       hidden.classList.add(`hidden`);
     }
   };
 
   const hideEmptyNumber = (check, hidden) => {
+    checkElementForFull(hidden);
+    checkElementForFull(check);
+
     if (check === 0) {
       hidden.classList.add(`hidden`);
     }
   };
-
-  const checkDataStringsForEmpty = (data, avatar, title, address, type, capacity, price, time, description, photos) => {
-
-    if (!avatar) {
-      avatar.classList.add(`hidden`);
-      throw new Error(`avatar для карточки не найден`);
-    }
-
-    if (!title) {
-      title.classList.add(`hidden`);
-      throw new Error(` title для карточки не найден`);
-    }
-
-    if (!address) {
-      address.classList.add(`hidden`);
-      throw new Error(`address для карточки не найден`);
-    }
-
-    if (!type) {
-      type.classList.add(`hidden`);
-      throw new Error(`type для карточки не найден`);
-    }
-
-    if (!price) {
-      price.classList.add(`hidden`);
-      throw new Error(`price для карточки не найден`);
-    }
-
-    if (!time) {
-      time.classList.add(`hidden`);
-      throw new Error(`time для карточки не найден`);
-    }
-
-    if (!description) {
-      description.classList.add(`hidden`);
-      throw new Error(`description для карточки не найден`);
-    }
-
-    if (!capacity) {
-      capacity.classList.add(`hidden`);
-      throw new Error(`capacity для карточки не найден`);
-    }
-
-    if (!photos) {
-      photos.classList.add(`hidden`);
-      throw new Error(`photos для карточки не найден`);
-    }
-
-    hideEmptyString(data.author.avatar, avatar);
-    hideEmptyString(data.offer.title, title);
-    hideEmptyString(data.offer.address, address);
-
-    hideEmptyString(data.offer.type, type);
-    hideEmptyString(data.offer.price, price);
-    hideEmptyString(data.offer.description, description);
-
-    hideEmptyNumber(data.offer.guests, capacity);
-    hideEmptyNumber(data.offer.rooms, capacity);
-    hideEmptyNumber(data.offer.photos.length, photos);
-  };
-
 
   const createErrorMessage = (errorMessage) => {
     const node = document.createElement(`div`);
@@ -138,35 +79,26 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
-  const showEmptyElementError = (element, errorText) => {
-    if (!element) {
-      throw new Error(`${errorText}`);
-    }
-  };
+  const renderData = (data) => {
+    checkArrayForTypeAndFull(data);
 
-  const showWrongElementTypeError = (element, elementType, errorText) => {
-    if (typeof element !== elementType) {
-      throw new Error(errorText);
-    }
+    window.pin.dellAllElements();
+    window.card.dellAllElements();
+
+    window.pin.renderAllElements(data);
+    window.card.renderAllElements(data);
   };
 
   window.util = {
-    getRandomArrayElement,
-    getRandomRangeElement,
-    getShuffledArray,
-
     pluralizeWord,
     disableHTMLElements,
     setEnableHTMLElements,
 
-    getArrayOfNumbers,
-    hideEmptyString,
-    hideEmptyNumber,
-
-    checkDataStringsForEmpty,
     createErrorMessage,
-    showEmptyElementError,
+    renderData,
+    checkArrayForTypeAndFull,
 
-    showWrongElementTypeError
+    hideEmptyString,
+    hideEmptyNumber
   };
 })();

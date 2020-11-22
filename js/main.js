@@ -36,29 +36,18 @@
     advertisementForm.classList.remove(`ad-form--disabled`);
     window.form.setAddressCoordinates(mainPin, window.constants.PAGE_IS_ACTIVE_ADDRESS_X, window.constants.PAGE_IS_ACTIVE_ADDRESS_Y);
 
-    window.validation.addTitleInputListener();
-    window.validation.addPriceInputListener();
-    window.validation.addTypeInputListener();
-
-    window.validation.addRoomInputListener();
-    window.validation.addGuestInputListener();
-    window.validation.addTimeinListener();
-
-    window.validation.addTimeoutListener();
+    window.validation.addAllFormInputsListener();
     window.form.addResetFormListener();
 
     let serverData = [];
 
     const successHandler = (serverArray) => {
-      if (!serverArray) {
-        throw new Error(`от сервера получен не тот формат данных`);
-      }
+
+      window.util.checkArrayForTypeAndFull(serverArray);
+
       serverData = serverArray;
-      window.filter.addApartamentsFilterListener(serverData);
-      window.filter.addRoomsFilterListener(serverData);
-      window.filter.addGuestsFilterListener(serverData);
-      window.filter.addFeaturesFilterListener(serverData);
-      window.filter.addPriceFilterListener(serverData);
+      window.util.renderData(serverData);
+      window.filter.addFilterListener(serverData);
     };
 
     const errorHandler = (errorMessage) => {

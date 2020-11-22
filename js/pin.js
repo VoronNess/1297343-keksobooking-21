@@ -41,12 +41,6 @@
   };
 
   const renderElement = (element, data) => {
-    if (typeof data === `undefined`) {
-      throw new Error(`не передали массив в параметр renderElement`);
-    }
-    if (typeof data !== `object`) {
-      throw new Error(`массив передан не в том формате в параметре renderElement`);
-    }
 
     const pinLeftPosition = window.constants.MOVE_X + data.location.x;
     const pinTopPosition = window.constants.MOVE_Y + data.location.y;
@@ -56,19 +50,12 @@
 
     element.querySelector(`img`).src = data.author.avatar;
     element.querySelector(`img`).alt = data.offer.title;
-    window.util.hideEmptyNumber(data.offer.length, element);
+    // window.util.hideEmptyNumber(data.offer.length, element);
 
     element.classList.add(`map__pin--rendered`);
   };
 
   const renderAllElements = (array) => {
-    if (typeof array === `undefined`) {
-      throw new Error(`не передали массив в параметр renderElement`);
-    }
-    if (typeof array !== `object`) {
-      throw new Error(`массив передан не в том формате в параметре renderAllElements`);
-    }
-
     if (array.length === 0) {
       return;
     }

@@ -9,148 +9,73 @@
   const featuresFilter = filters.querySelector(`#housing-features`);
   const priceFilter = filters.querySelector(`#housing-price`);
 
-  const renderFilteredData = (data) => {
-    window.pin.dellAllElements();
-    window.card.dellAllElements();
+  const filterFeatures = (data) => {
+    const featuresElements = featuresFilter.querySelectorAll(`input:checked`);
 
-    window.pin.renderAllElements(data);
-    window.card.renderAllElements(data);
-  };
-
-  let userApartmentsChoice = window.constants.ADVERTISEMENT_TYPES[4].id;
-  let userRoomsChoice = window.constants.ADVERTISEMENT_TYPES[4].id;
-  let userGuestsChoice = window.constants.ADVERTISEMENT_TYPES[4].id;
-
-  let userFeaturesChoice = ``;
-  let userPriceChoice = window.constants.ADVERTISEMENT_TYPES[4].id;
-
-  const getRank = function (item) {
-    let rank = 0;
-
-    if (item.offer.type === userApartmentsChoice) {
-      rank += 4;
-    }
-
-    if (item.offer.rooms === userRoomsChoice) {
-      rank += 2;
-    }
-
-    if (item.offer.guests === userGuestsChoice) {
-      rank += 2;
-    }
-
-    if (item.offer.features === userFeaturesChoice) {
-      rank += 4;
-    }
-
-    if (item.offer.price === userPriceChoice) {
-      rank += 5;
-    }
-
-    return rank;
-  };
-
-  const addApartamentsFilterListener = (data) => {
-    apartmentsFilter.addEventListener(`input`, (evt) => {
-      const target = evt.target;
-      const filterValue = target.value;
-
-      userApartmentsChoice = filterValue;
-      filterAdvertisements(data);
-    });
-  };
-
-  const addRoomsFilterListener = (data) => {
-    roomsFilter.addEventListener(`input`, (evt) => {
-      const target = evt.target;
-      const filterValue = target.value;
-
-      userRoomsChoice = Number(filterValue);
-      filterAdvertisements(data);
-    });
-  };
-
-  const addGuestsFilterListener = (data) => {
-    guestsFilter.addEventListener(`input`, (evt) => {
-      const target = evt.target;
-      const filterValue = target.value;
-
-      userGuestsChoice = Number(filterValue);
-      filterAdvertisements(data);
-    });
-  };
-
-  const addFeaturesFilterListener = (data) => {
-    featuresFilter.addEventListener(`input`, (evt) => {
-      const target = evt.target;
-      let filterValue;
-
-      if (target.checked) {
-        filterValue = target.value;
+    for (let featuresElement of featuresElements) {
+      if (data.indexOf(featuresElement.value) === -1) {
+        return false;
       }
-      userFeaturesChoice = filterValue;
-      filterAdvertisements(data);
-    });
-  };
+    }
 
-  const addPriceFilterListener = (data) => {
-    priceFilter.addEventListener(`input`, (evt) => {
-      const target = evt.target;
-      const filterValue = target.value;
-
-      if (filterValue === `middle`) {
-        userPriceChoice = userPriceChoice >= 10000 && userPriceChoice <= 49000;
-      }
-      if (filterValue === `low`) {
-        userPriceChoice = userPriceChoice >= 0 && userPriceChoice <= 9999;
-      }
-      if (filterValue === `high`) {
-        userPriceChoice = userPriceChoice >= 50000;
-      }
-
-      filterAdvertisements(data);
-    });
+    return true;
   };
 
   const filterAdvertisements = function (items) {
-    renderFilteredData(items.sort(function (left, right) {
-      return getRank(right) - getRank(left);
-    }));
+    const filteredApartments = items
+
+    .filter(function (card) {
+      if (apartmentsFilter.value === window.constants.FILTER_VALUE_ANY) {
+        return card.offer.type;
+      }
+      return card.offer.type === apartmentsFilter.value;
+    })
+
+    .filter(function (card) {
+      if (roomsFilter.value === window.constants.FILTER_VALUE_ANY) {
+        return card.offer.rooms;
+      }
+      return card.offer.rooms === +roomsFilter.value;
+    })
+
+    .filter(function (card) {
+      if (guestsFilter.value === window.constants.FILTER_VALUE_ANY) {
+        return card.offer.guests;
+      }
+      return card.offer.guests === +guestsFilter.value;
+    })
+
+    .filter(function (card) {
+      if (priceFilter.value === `low`) {
+        return card.offer.price < window.constants.MIDDLE_PRICE_RANGE;
+      }
+
+      if (priceFilter.value === `middle`) {
+        return card.offer.price >= window.constants.MIDDLE_PRICE_RANGE
+        && card.offer.price <= window.constants.MAX_PRICE_RANGE;
+      }
+
+      if (priceFilter.value === `high`) {
+        return card.offer.price > window.constants.MAX_PRICE_RANGE;
+      }
+      if (priceFilter.value === `any`) {
+        return card.offer.price;
+      }
+      return card.offer.price !== 0;
+
+    });
+
+    window.util.renderData(filteredApartments);
+  };
+
+  const addFilterListener = (data) => {
+    filters.addEventListener(`change`, () => {
+      filterAdvertisements(data);
+    });
   };
 
   window.filter = {
     filterAdvertisements,
-    addApartamentsFilterListener,
-    addRoomsFilterListener,
-
-    addGuestsFilterListener,
-    addFeaturesFilterListener,
-    addPriceFilterListener,
+    addFilterListener,
   };
 })();
-
-// const priceFilter = filters.querySelector(`#housing-price`);
-// let userPricesChoice = 0;
-/* const samePrices = items.filter(function (price) {
-      for (let i = 0; i < window.constants.ADVERTISEMENT_PRICES.length; i++) {
-        const currentPrice = window.constants.ADVERTISEMENT_PRICES[i];
-
-        if (price.offer.price === currentPrice.price) {
-          userPrice = currentPrice.price;
-        }
-      }
-      return price.offer.price === userPrice;
-    });
-    */
-
-// let sameItemsArray = sameApartaments.concat(samePrices);
-// console.log(sameApartaments);
-/* const addPriceFilterListener = (data) => {
-    priceFilter.addEventListener(`input`, (evt) => {
-      const target = evt.target;
-      const filterValue = target.value;
-
-      userPricesChoice = filterValue;
-      filterAdvertisements(data, userApartmentsChoice, userPricesChoice);
-    });
-  };*/

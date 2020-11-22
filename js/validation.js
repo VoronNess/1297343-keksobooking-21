@@ -272,14 +272,19 @@
     });
   };
 
-  window.validation = {
-    addTitleInputListener,
-    addPriceInputListener,
-    addTypeInputListener,
+  const addAllFormInputsListener = () => {
+    addTitleInputListener();
+    addPriceInputListener();
+    addTypeInputListener();
 
-    addRoomInputListener,
-    addGuestInputListener,
-    addTimeinListener,
-    addTimeoutListener,
+    addRoomInputListener();
+    addGuestInputListener();
+    addTimeinListener();
+
+    addTimeoutListener();
+  };
+
+  window.validation = {
+    addAllFormInputsListener
   };
 })();
